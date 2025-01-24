@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="signin.css">
+    <link rel="stylesheet" href="style.css">
+    <title><%= Formtype==='signin'? 'Sign In' : 'Sign Up' %></title>
+  </head>
+
+ 
+  <body>
+      <%- include('./partials/NavBar') %>
+      <div class="FormContainer">
+
+        <form id="container" action=<%= Formtype === 'signup' ? '/signup' : '/signin' %> method="post">
+          <div id="login">
+            <h2><%= Formtype==='signin'? 'Sign In' : 'Sign Up' %></h2>
+            <input type="email" placeholder="Email" name="Email" required />
+            <% if( Formtype==='signup') {%>
+              <input type="text" placeholder="Username" name="Username" required/>
+             <% } %>
+            <input type="password" placeholder="Password" name="Password" required />
+            <div>
+    
+              <button id="loginBtn"  type="submit"><%= Formtype === 'signup' ? 'Submit' : 'Login' %></button>
+              <% if (Formtype  === "signup") { %>
+                <p>Already have an account? <a href="/signin" >Sign In</a></p>
+              <% } else { %>
+                <p>Don't have an account? <a href="/signup" >Sign Up</a></p>
+              <% } %>
+            </div>
+          </div>
+         
+        </form>
+      </div>
+   <script src="login.js"></script>
+  </body>
+</html>
+
+git branch -M main
+git push -u origin main
