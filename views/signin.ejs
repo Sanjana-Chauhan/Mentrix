@@ -23,7 +23,7 @@
             <input type="password" placeholder="Password" name="Password" required />
             <div>
     
-              <button id="loginBtn"  type="submit"><%= Formtype === 'signup' ? 'Submit' : 'Login' %></button>
+              <button id="loginBtn"  type="submit" data-formtype=<%= Formtype %>><%= Formtype === 'signup' ? 'Submit' : 'Login' %></button>
               <% if (Formtype  === "signup") { %>
                 <p>Already have an account? <a href="/signin" >Sign In</a></p>
               <% } else { %>
@@ -37,6 +37,3 @@
    <script src="login.js"></script>
   </body>
 </html>
-
-git branch -M main
-git push -u origin main
