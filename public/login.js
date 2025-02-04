@@ -1,50 +1,64 @@
-document.querySelector('form').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-   
-    const formData = new FormData(e.target); //return an object of the form data.
+document.querySelector("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    const data = Object.fromEntries(formData.entries());  // it will create an object where each form field's name becomes a key, and its value becomes the corresponding value.y
-    const formType = e.submitter.getAttribute("data-formtype");
-   
-    let url='';
-    let headers = {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+  const formType = e.submitter.getAttribute("data-formtype");
+
+  const url =
+    formType === "signup"
+      ? "http://localhost:4000/signup"
+      : "http://localhost:4000/SignIn";
+
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
   };
-    if(formType==='signup'){
-      url='http://localhost:4000/signup';
-    }
-    else{
-      url='http://localhost:4000/SignIn';
-      headers['authorization']=localStorage.getItem('token');
-    }
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
-      if(formType==='signup'){
-        if (result.token) {
-          localStorage.setItem('token', result.token);
-          window.location.href = '/home';
-        } else {
-          console.error('Signup failed:', result.message);
-        }
+  if (formType !== "signup") {
+    headers.authorization = localStorage.getItem("token");
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (formType === "signup") {
+      if (result.token) {
+        localStorage.setItem("token", result.token);
+        alert("Signup successful");
+      } else {
+        console.error("Signup failed:", result.message);
+        alert("Signup failed");
       }
-      else{
-          if(result.status==="Success"){
-            window.location.href = '/home';
-          }
-          else{
-            alert("Invalid Credentials.Either Mail or Password is n correct");
-          }
+    } else {
+      if (result.exists === false) {
+        alert("User does not exist");
+      } 
+      else {
+
+
+        const ttoken= localStorage.getItem("token");
+        fetch("http://localhost:4000/Home", {
+          method: "GET",
+          headers: {
+              
+            "authorization":ttoken,
+          },
+        }).then(() => {
+          console.log("Success"); 
+        })
+        
+
       }
-    } catch (error) {
-      console.error('Error during signup:', error);
     }
-     
-  });
-  
+  } catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred");
+  }
+});

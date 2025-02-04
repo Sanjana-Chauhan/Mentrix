@@ -23,7 +23,7 @@ App.use(StudentRouter);
 const PORT = 4000;
 
   App.listen(PORT, () => {
-    console.log("server started on localhost:4000");
+    console.log("server started on localhost:"+PORT);
   })
 
  
