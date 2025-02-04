@@ -15,10 +15,6 @@ document.querySelector("form").addEventListener("submit", async (e) => {
     Accept: "application/json",
   };
 
-  if (formType !== "signup") {
-    headers.authorization = localStorage.getItem("token");
-  }
-
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -26,39 +22,19 @@ document.querySelector("form").addEventListener("submit", async (e) => {
       body: JSON.stringify(data),
     });
 
+    // Manually handle HTTP errors
+    if (!response.ok) {
+      const errorData = await response.json(); // Parse error response
+      console.log("Error data:", errorData);
+      throw new Error(errorData.message || "Something went wrong!");
+    }
+
     const result = await response.json();
 
-    if (formType === "signup") {
-      if (result.token) {
-        localStorage.setItem("token", result.token);
-        alert("Signup successful");
-      } else {
-        console.error("Signup failed:", result.message);
-        alert("Signup failed");
-      }
-    } else {
-      if (result.exists === false) {
-        alert("User does not exist");
-      } 
-      else {
-
-
-        const ttoken= localStorage.getItem("token");
-        fetch("http://localhost:4000/Home", {
-          method: "GET",
-          headers: {
-              
-            "authorization":ttoken,
-          },
-        }).then(() => {
-          console.log("Success"); 
-        })
-        
-
-      }
+    if (result && result.token) {
+      window.location.href = "/Home"; // Redirect to the Home page
     }
   } catch (error) {
-    console.error("Error:", error);
-    alert("An error occurred");
+    alert(error.message || "An error occurred"); // show the error message from the server
   }
 });
